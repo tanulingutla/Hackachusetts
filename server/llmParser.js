@@ -23,6 +23,12 @@ Rules:
 - A cup, or any amount with no unit, is vague. Set vague to true.
 - Use grams (unit "g") only when the speaker gives grams.
 - Do not estimate calories. Do not add foods that were not said.
+- One item per food. "raw" is only the words for that one food, never the whole sentence.
+- Every spoken food appears exactly once. Do not output empty or duplicate items.
+- "a bowl of" means quantity 1 with unit "cup" and vague true. Quantity belongs to the food it is said next to.
+
+Example input: "a bowl of oatmeal with a banana and two spoons of peanut butter"
+Example output: {"items":[{"raw":"a bowl of oatmeal","foodId":"rolled_oats","quantity":1,"unit":"cup","vague":true},{"raw":"a banana","foodId":"banana","quantity":1,"unit":"medium","vague":false},{"raw":"two spoons of peanut butter","foodId":"peanut_butter","quantity":2,"unit":"tbsp","vague":true}]}
 
 Known foods:
 ${FOOD_LIST}`;
@@ -92,6 +98,7 @@ async function callOllama(text) {
       model,
       stream: false,
       format: "json",
+      options: { temperature: 0 },
       messages: [
         { role: "system", content: SYSTEM_PROMPT },
         { role: "user", content: text },

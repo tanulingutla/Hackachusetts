@@ -21,13 +21,6 @@ import {
 } from "./auth.js";
 import { buildDemoData } from "./demoData.js";
 import { parseWearableCsv } from "./wearableImport.js";
-import {
-  connectionStatus,
-  disconnect,
-  finishConnect,
-  startConnect,
-  syncRecent,
-} from "./coros.js";
 import { GENDER_OPTIONS } from "../src/lib/options.js";
 import { SLOT_NAMES } from "./slots.js";
 import {
@@ -756,54 +749,6 @@ function handleReport(req, res, query) {
   return sendJson(res, 200, buildReport(row));
 }
 
-// ---------- COROS ----------
-
-const PUBLIC_BASE_URL = process.env.PUBLIC_BASE_URL || "http://localhost:5174";
-const COROS_REDIRECT_URI = `${PUBLIC_BASE_URL}/api/coros/callback`;
-
-async function handleCorosConnect(req, res) {
-  const id = requireUserId(req);
-  try {
-    const url = await startConnect(id, COROS_REDIRECT_URI);
-    return sendJson(res, 200, { url });
-  } catch (err) {
-    throw httpError(502, err.message);
-  }
-}
-
-// COROS redirects the browser here. The session cookie isn't sent on that cross-site
-// redirect, so the athlete is identified by the state value saved when connecting.
-async function handleCorosCallback(req, res, query) {
-  const back = (params) => {
-    res.writeHead(302, { location: `${PUBLIC_BASE_URL}/?${params}` });
-    res.end();
-  };
-  if (query.get("error")) return back("coros=denied");
-  try {
-    await finishConnect(query.get("code") ?? "", query.get("state") ?? "");
-    return back("coros=connected");
-  } catch (err) {
-    console.error("COROS connect failed:", err.message);
-    return back("coros=error");
-  }
-}
-
-async function handleCorosSync(req, res) {
-  const id = requireUserId(req);
-  try {
-    const result = await syncRecent(id, 14);
-    return sendJson(res, 200, result);
-  } catch (err) {
-    throw httpError(502, err.message);
-  }
-}
-
-function handleCorosDisconnect(req, res) {
-  const id = requireUserId(req);
-  disconnect(id);
-  return sendJson(res, 200, { ok: true });
-}
-
 // ---------- router ----------
 
 async function route(req, res) {
@@ -843,14 +788,6 @@ async function route(req, res) {
   if (m === "DELETE" && path === "/api/period") return handleDeletePeriod(req, res);
 
   if (m === "POST" && path === "/api/report-link") return handleCreateReportLink(req, res);
-
-  if (m === "GET" && path === "/api/coros/status") {
-    return sendJson(res, 200, connectionStatus(requireUserId(req)));
-  }
-  if (m === "POST" && path === "/api/coros/connect") return handleCorosConnect(req, res);
-  if (m === "GET" && path === "/api/coros/callback") return handleCorosCallback(req, res, query);
-  if (m === "POST" && path === "/api/coros/sync") return handleCorosSync(req, res);
-  if (m === "DELETE" && path === "/api/coros") return handleCorosDisconnect(req, res);
 
   if (m === "POST" && path === "/api/demo/seed") return handleSeedDemo(req, res);
   if (m === "POST" && path === "/api/demo/clear") return handleClearDemo(req, res);

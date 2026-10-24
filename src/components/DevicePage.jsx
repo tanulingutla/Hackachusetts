@@ -1,4 +1,3 @@
-import CorosConnect from "./CorosConnect.jsx";
 import CsvImport from "./CsvImport.jsx";
 
 // One page per device. Each shows only what applies to that device, under the device's own name.
@@ -11,8 +10,6 @@ export default function DevicePage({ device, onBack }) {
         </button>
         <h2 className="device-page-title">{device.name}</h2>
       </div>
-
-      {device.kind === "coros" && <CorosConnect />}
 
       {device.kind === "csv" && (
         <CsvImport

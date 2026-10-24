@@ -1,10 +1,9 @@
 // Devices shown in the connect list. Each name opens its own page.
 // kind decides what that page offers:
-//   coros  - the COROS connection flow
 //   csv    - CSV export and import
 //   soon   - not supported yet
 export const DEVICES = [
-  { id: "coros", name: "COROS", kind: "coros" },
+  { id: "coros", name: "COROS", kind: "csv" },
   { id: "garmin", name: "Garmin", kind: "csv" },
   { id: "whoop", name: "WHOOP", kind: "csv" },
   { id: "oura", name: "Oura", kind: "csv" },

@@ -64,41 +64,6 @@ db.exec(`
   );
 `);
 
-// COROS connection storage. Tokens are stored encrypted (see coros.js).
-db.exec(`
-  CREATE TABLE IF NOT EXISTS oauth_clients (
-    redirect_uri TEXT PRIMARY KEY,
-    client_id TEXT NOT NULL,
-    created_at TEXT NOT NULL
-  );
-
-  CREATE TABLE IF NOT EXISTS oauth_pending (
-    state TEXT PRIMARY KEY,
-    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    code_verifier TEXT NOT NULL,
-    redirect_uri TEXT NOT NULL,
-    created_at INTEGER NOT NULL
-  );
-
-  CREATE TABLE IF NOT EXISTS coros_connections (
-    user_id INTEGER PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
-    client_id TEXT NOT NULL,
-    access_token_enc TEXT NOT NULL,
-    refresh_token_enc TEXT NOT NULL,
-    expires_at INTEGER NOT NULL,
-    connected_at TEXT NOT NULL,
-    last_sync_at TEXT
-  );
-
-  CREATE TABLE IF NOT EXISTS coros_raw (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    tool TEXT NOT NULL,
-    fetched_at TEXT NOT NULL,
-    body TEXT NOT NULL
-  );
-`);
-
 // Add the sports column to existing databases (sport names for each day).
 const wearableColumns = db.prepare("PRAGMA table_info(wearable_days)").all().map((c) => c.name);
 if (!wearableColumns.includes("sports")) {

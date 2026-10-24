@@ -20,7 +20,7 @@ WHY THO helps endurance athletes tell apart two things that look alike on a watc
 - Each account only reads its own data. The API enforces this.
 - Passwords use scrypt. Sessions are HMAC-signed HttpOnly cookies.
 - Report links are signed with a separate purpose and cannot be used to sign in.
-- COROS tokens are encrypted with AES-256-GCM. Never print the TOKEN_ENCRYPTION_KEY from .env.
+- Live device sync is not built. Every device imports from CSV. Never print secrets from .env, including LLM API keys.
 
 ## Commands
 
