@@ -2,7 +2,7 @@
 
 ## Problem
 
-Endurance athletes can look fit and still be underfueled. Overtraining and underfueling look alike on a watch. Clinicians and coaches need a clear, shareable record without reading raw logs.
+Athletes of any sex, sport, and level can look fit and still be underfueled, and many don't notice or don't prioritize eating enough. Overtraining and underfueling look alike on a watch. Coaches and clinicians need a clear, shareable record without reading raw logs.
 
 ## User stories
 

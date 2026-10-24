@@ -1,6 +1,8 @@
 # WHY THO product context
 
-WHY THO helps endurance athletes tell apart two things that look alike on a watch: overtraining and underfueling. Athletes log meals by voice or text, import or sync wearable data, and get a plain-language fueling check. Clinicians and coaches get a PDF report.
+WHY THO is for athletes of any sex, sport, and level. Athletes often underfuel without noticing or caring, and underfueling looks a lot like overtraining on a watch. The app tells the two apart. Athletes log meals by voice or text, import wearable data from CSV, and get a plain-language fueling check. Coaches and clinicians get a PDF report.
+
+Do not frame the product around one group. Period tracking is one optional feature. It turns on automatically for female profiles and is available to anyone, and the rest of the app is the same for everyone.
 
 ## Rules for every change
 

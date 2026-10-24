@@ -16,7 +16,7 @@ const STEPS = [
   {
     number: "3",
     title: "Read the weekly check",
-    text: "See whether fueling and recovery are moving the wrong way across the week, then share a report if needed.",
+    text: "See whether fueling and recovery are moving the wrong way across the week, then download a PDF report if needed.",
   },
 ];
 
@@ -45,7 +45,7 @@ export default function Landing({ onChoose }) {
         <p className="home-lead">
           WHY THO combines your <strong>watch data</strong>, your <strong>voice-logged meals</strong>, and optional{" "}
           <strong>cycle tracking</strong> to show which one is happening. It looks at weekly trends, not single days,
-          and builds a one-page report for your sports dietitian or doctor.
+          and builds a PDF report for your coach, sports dietitian, or doctor.
         </p>
 
         <ul className="home-list">
@@ -54,7 +54,7 @@ export default function Landing({ onChoose }) {
           <li>See your daily target, what you have eaten, and what is still remaining</li>
           <li>Optional period tracking for athletes who menstruate</li>
           <li>Add fat-free mass or measured RMR for a sharper target</li>
-          <li>Share a read-only report link with a clinician or coach, valid for 7 days</li>
+          <li>Download a PDF report to hand to a coach, dietitian, or doctor</li>
         </ul>
 
 
@@ -75,8 +75,8 @@ export default function Landing({ onChoose }) {
 
         <p className="privacy-note">
           Your account and its data are stored on the WHY THO server and are visible only to you. Meal text is
-          processed by the calorie parser, which may be a third-party AI service. Nothing is shared with anyone unless
-          you create a report link and send it.
+          processed by the calorie parser, which may use an AI model. Nothing is shared with anyone unless you download
+          a report and send it.
         </p>
       </main>
     </>
