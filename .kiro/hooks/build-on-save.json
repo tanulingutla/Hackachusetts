@@ -1,0 +1,16 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Build after saving app code",
+      "trigger": "PostFileSave",
+      "description": "Runs the production build after saving app code so build errors show up right away.",
+      "matcher": "(src|server)[\\\\/].*\\.(jsx?|css)$",
+      "action": {
+        "type": "command",
+        "command": "npx vite build",
+        "timeout": 120
+      }
+    }
+  ]
+}

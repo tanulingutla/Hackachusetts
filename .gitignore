@@ -1,0 +1,5 @@
+node_modules/
+dist/
+# Personal health data. Never commit the database, imports, or DEXA files.
+data/
+.env
