@@ -11,6 +11,7 @@ const dataDir = path.join(here, "..", "data");
 const dbPath = process.env.APP_DB_PATH || path.join(dataDir, "app.db");
 fs.mkdirSync(path.dirname(dbPath), { recursive: true });
 
+export const DB_PATH = dbPath;
 export const db = new DatabaseSync(dbPath);
 
 db.exec(`

@@ -3,7 +3,7 @@
 // which requires a report token the athlete generated.
 import crypto from "node:crypto";
 import http from "node:http";
-import { db } from "./db.js";
+import { DB_PATH, db } from "./db.js";
 import { parseMealText } from "./llmParser.js";
 import {
   attemptAllowed,
@@ -821,4 +821,11 @@ const server = http.createServer(async (req, res) => {
 server.listen(PORT, HOST, () => {
   const provider = process.env.LLM_PROVIDER || "none (rules only)";
   console.log(`API on http://${HOST}:${PORT}. LLM: ${provider}.`);
+
+  // Shows in the host's deploy logs, so a missing disk is easy to spot.
+  const users = db.prepare("SELECT COUNT(*) AS n FROM users").get().n;
+  console.log(`Database: ${DB_PATH} (${users} account${users === 1 ? "" : "s"} at startup)`);
+  if (process.env.RAILWAY_ENVIRONMENT && !process.env.APP_DB_PATH) {
+    console.warn("WARNING: APP_DB_PATH is not set. Data is on a temporary disk and will be lost on redeploy.");
+  }
 });
