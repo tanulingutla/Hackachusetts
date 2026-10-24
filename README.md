@@ -72,6 +72,25 @@ LLM_MODEL=llama3.2
 
 Anthropic also works: set `LLM_PROVIDER=anthropic`, `ANTHROPIC_API_KEY`, and `LLM_MODEL`. Never commit the `.env` file.
 
+## Deploy on Railway
+
+One Node process serves the built pages and the API.
+
+1. In Railway, create a project from this GitHub repo and pick the branch to deploy. Railway builds with `npm run build` and starts with `npm start`.
+2. Add a **Volume** to the service and mount it at `/data`, so accounts and meals survive redeploys.
+3. Set these variables on the service:
+
+| Variable | Value |
+| --- | --- |
+| `HOST` | `0.0.0.0` |
+| `TRUST_PROXY` | `1` (login rate limits use the real client address behind Railway's proxy) |
+| `APP_DB_PATH` | `/data/app.db` |
+| `SESSION_SECRET` | a long random string. Generate one with `node -p "crypto.randomBytes(32).toString('base64url')"` |
+
+4. Under **Settings > Networking**, generate a public domain. Railway sets `PORT` itself.
+
+Meal parsing uses the rule-based parser on Railway, because Ollama runs on your own computer. To use a hosted model there, set `LLM_PROVIDER=anthropic`, `ANTHROPIC_API_KEY`, and `LLM_MODEL` as Railway variables. Meal text would then be sent to Anthropic.
+
 ## Privacy and security
 
 - Passwords are hashed with scrypt. Sessions are signed, HttpOnly, SameSite=Strict cookies.
@@ -81,7 +100,7 @@ Anthropic also works: set `LLM_PROVIDER=anthropic`, `ANTHROPIC_API_KEY`, and `LL
 
 ## Known limits
 
-- **Not hosted.** It runs locally. The server needs a Node host with disk storage for the SQLite file.
+- **Single server, SQLite on one disk.** Fine for a demo and a small group of users. A larger rollout would move to a managed database.
 - **No live device sync.** Every device imports from CSV. A COROS sync was built and removed because it was never tested end to end.
 - **Not browser-tested end to end,** and no accessibility audit yet. No automated tests yet.
 - **Food table is hand-built** and covers common foods only. Amounts like "a bowl" are flagged as vague so the athlete can confirm them.

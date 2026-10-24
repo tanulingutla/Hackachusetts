@@ -7,9 +7,11 @@ import { DatabaseSync } from "node:sqlite";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const dataDir = path.join(here, "..", "data");
-fs.mkdirSync(dataDir, { recursive: true });
+// APP_DB_PATH points at a persistent disk in production, for example /data/app.db.
+const dbPath = process.env.APP_DB_PATH || path.join(dataDir, "app.db");
+fs.mkdirSync(path.dirname(dbPath), { recursive: true });
 
-export const db = new DatabaseSync(process.env.APP_DB_PATH || path.join(dataDir, "app.db"));
+export const db = new DatabaseSync(dbPath);
 
 db.exec(`
   PRAGMA foreign_keys = ON;

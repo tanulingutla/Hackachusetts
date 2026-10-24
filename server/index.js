@@ -20,6 +20,7 @@ import {
   verifyPassword,
 } from "./auth.js";
 import { buildDemoData } from "./demoData.js";
+import { serveStatic } from "./static.js";
 import { parseWearableCsv } from "./wearableImport.js";
 import { GENDER_OPTIONS } from "../src/lib/options.js";
 import { SLOT_NAMES } from "./slots.js";
@@ -38,7 +39,18 @@ import {
 import { addDays, averageCycleLength, cycleLengths, cyclePhase, isIrregular } from "../src/lib/cycle.js";
 
 const PORT = Number(process.env.PORT) || 8787;
-const HOST = "127.0.0.1";
+// Localhost only by default. A host sets HOST=0.0.0.0 so its proxy can reach the server.
+const HOST = process.env.HOST || "127.0.0.1";
+
+// Behind a trusted proxy (TRUST_PROXY=1) the real client address is the last X-Forwarded-For entry,
+// which the proxy appended. Earlier entries can be forged by the client, so they are ignored.
+function clientIp(req) {
+  if (process.env.TRUST_PROXY === "1") {
+    const forwarded = String(req.headers["x-forwarded-for"] ?? "").split(",").pop().trim();
+    if (forwarded) return forwarded;
+  }
+  return req.socket.remoteAddress ?? "unknown";
+}
 const MAX_JSON_BYTES = 8 * 1024;
 const MAX_CSV_BYTES = 1024 * 1024;
 const TREND_DAYS = 28;
@@ -256,7 +268,7 @@ function cycleSummary(user, today) {
 // ---------- route handlers ----------
 
 async function handleSignup(req, res) {
-  const ip = req.socket.remoteAddress ?? "unknown";
+  const ip = clientIp(req);
   if (!attemptAllowed(ip)) return sendJson(res, 429, { error: "Too many attempts. Try again in 15 minutes." });
 
   const body = await readJson(req);
@@ -301,7 +313,7 @@ async function handleSignup(req, res) {
 }
 
 async function handleLogin(req, res) {
-  const ip = req.socket.remoteAddress ?? "unknown";
+  const ip = clientIp(req);
   if (!attemptAllowed(ip)) return sendJson(res, 429, { error: "Too many attempts. Try again in 15 minutes." });
 
   const body = await readJson(req);
@@ -797,6 +809,7 @@ async function route(req, res) {
 
 const server = http.createServer(async (req, res) => {
   try {
+    if (!req.url.startsWith("/api/") && serveStatic(req, res)) return;
     await route(req, res);
   } catch (err) {
     if (err.status) return sendJson(res, err.status, { error: err.message });
