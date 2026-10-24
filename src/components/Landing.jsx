@@ -43,9 +43,9 @@ export default function Landing({ onChoose }) {
         <h1 className="home-title">Is it overtraining, or are you underfueling?</h1>
 
         <p className="home-lead">
-          WHY THO combines your <strong>watch data</strong>, your <strong>voice-logged meals</strong>, and optional{" "}
-          <strong>cycle tracking</strong> to show which one is happening. It looks at weekly trends, not single days,
-          and builds a PDF report for your coach, sports dietitian, or doctor.
+          WHY THO combines your <strong>watch data</strong>, your <strong>logged meals</strong>, and optional{" "}
+          <strong>cycle tracking</strong> for female athletes to show which one is happening. It looks at weekly
+          trends, not single days, and builds a PDF report for your coach, sports dietitian, or doctor.
         </p>
 
         <ul className="home-list">
